@@ -1,39 +1,69 @@
 <?php
 
-use yii\helpers\Html;
+use backend\assets\TagsInputAsset;
 use yii\bootstrap5\ActiveForm;
+use yii\helpers\Html;
 
-/** @var yii\web\View $this */
-/** @var common\models\Videos $model */
-/** @var yii\bootstrap5\ActiveForm $form */
+    /** @var yii\web\View $this */
+    /** @var common\models\Videos $model */
+    /** @var yii\bootstrap5\ActiveForm $form */
+
+    TagsInputAsset::register($this);
 ?>
 
 <div class="videos-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'options' => [
+            'enctype' => 'multipart/form-data',
+        ],
+    ]); ?>
 
-    <?= $form->field($model, 'video_id')->textInput(['maxlength' => true]) ?>
+    <div class="row">
+        <div class="col-md-8">
+            <?php echo $form->errorSummary($model) ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+            <?php echo $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+            <?php echo $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'tags')->textInput(['maxlength' => true]) ?>
+            <div class="form-group">
+                <label for=""><?php echo $model->getAttributeLabel('thumbnail') ?></label>
+                <div class="input-group mb-3">
+                    <div>
+                        <input type="file" class="form-control" id="thumbnail" 
+                        name="thumbnail">
+                        <img src="<?php echo $model->getThumbnailLink() ?>" class="img-thumbnail" style="max-width: 50%; height: auto;" alt="...">
+                    </div>
 
-    <?= $form->field($model, 'status')->textInput() ?>
+                    <label class="input-group-text" for="thumbnail">Upload</label>
+                </div>
+            </div>
 
-    <?= $form->field($model, 'has_thumbnail')->textInput() ?>
+            <?php echo $form->field($model, 'tags', [
+                'inputOptions' => [
+                    'data-role' => 'tagsinput',
+                ],
+            ])->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-sm-4">
+            <div class="ratio ratio-16x9 mb-3">
+                <video src="<?php echo $model->getVideoLink() ?>"
+                poster="<?php echo $model->getThumbnailLink() ?>"
+                controls></video>
+            </div>
+            <div class='mb-3'>
+                <div class="text-muted">Video Name</div>
+                <?php echo Html::encode($model->video_name) ?>
+            </div>
 
-    <?= $form->field($model, 'video_name')->textInput(['maxlength' => true]) ?>
+            <?php echo $form->field($model, 'status')->dropDownList($model->getStatusLabel()) ?>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
+        </div>
+    </div>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?php echo Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

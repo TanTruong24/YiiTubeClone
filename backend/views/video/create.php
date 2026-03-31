@@ -1,20 +1,29 @@
 <?php
 
-use yii\helpers\Html;
+    use yii\bootstrap5\ActiveForm;
+    use yii\helpers\Html;
 
-/** @var yii\web\View $this */
-/** @var common\models\Videos $model */
+    /** @var yii\web\View $this */
+    /** @var common\models\Videos $model */
 
-$this->title = 'Create Videos';
-$this->params['breadcrumbs'][] = ['label' => 'Videos', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+    $this->title                   = 'Create Videos';
+    $this->params['breadcrumbs'][] = ['label' => 'Videos', 'url' => ['index']];
+    $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="videos-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?php echo Html::encode($this->title) ?></h1>
 
     <div class="video-upload-center">
         <div class="d-flex flex-column align-items-center justify-content-center text-center video-upload-box">
+
+            <?php $form = ActiveForm::begin([
+                    'options' => [
+                        'enctype' => 'multipart/form-data',
+                    ],
+            ])?>
+            <?php echo $form->errorSummary($model) ?>
+            
             <div class="upload-icon">
                 <i class="fas fa-upload"></i>
             </div>
@@ -28,19 +37,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 </label>
                 <span id="videoFileName" class="text-muted">No file selected</span>
             </div>
+            <div class="mt-3 d-none" id="uploadSubmitWrap">
+                <button type="submit" class="btn btn-success" id="uploadSubmitBtn" disabled>Save and continue</button>
+            </div>
+            <?php ActiveForm::end(); ?>
         </div>
     </div>
 
 </div>
 
-<?php
-$this->registerJs(<<<JS
-document.getElementById('videoFile')?.addEventListener('change', function (event) {
-    var fileName = event.target.files && event.target.files.length ? event.target.files[0].name : 'No file selected';
-    var target = document.getElementById('videoFileName');
-    if (target) {
-        target.textContent = fileName;
-    }
-});
-JS);
-?>
