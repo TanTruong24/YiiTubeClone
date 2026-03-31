@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             [
-                'attribute' =>'video_id',
+                'attribute' =>'title',
                 'content' => function($model){
                     return $this->render('_video_item', ['model' => $model]);
                 }
@@ -39,7 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->getStatusLabel()[$model->status];
                  }
             ],
-            'status',
             //'has_thumbnail',
             //'video_name',
             'created_at:datetime',
@@ -49,7 +48,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Videos $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                 },
+                'buttons' => [
+                    'delete' => function($url) {
+                        return Html::a('Delete', $url,[
+                            'data-method' => 'post',
+                            'data-confirm' => 'Are you sure you want to delete this item?'
+                        ]);
+                    }
+                ]
             ],
         ],
     ]); ?>

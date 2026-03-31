@@ -73,7 +73,7 @@ class Videos extends \yii\db\ActiveRecord
             [['title', 'tags'], 'string', 'max' => 512],
             [['video_name'], 'string', 'max' => 255],
             ['status', 'default', 'value' => self::STATUS_DRAFT],
-            ['thumbnail', 'image', 'minWidth' => 2000, 'extensions' => 'jpg, jpeg, png'],
+            ['thumbnail', 'image', 'minWidth' => 1280, 'extensions' => 'jpg, jpeg, png'],
             ['video', 'file', 'extensions' => ['mp4']],
         ];
     }
@@ -173,6 +173,19 @@ class Videos extends \yii\db\ActiveRecord
         return $this->has_thumbnail
             ? Yii::$app->params['frontendUrl'] . 'storage/thumbnails/' . $this->video_id . '.jpg?v=' . $version
             : null;
+    }
+
+    public function afterDelete()
+    {
+        return parent::afterDelete();
+        $videoPath = Yii::getAlias('@frontend/web/storage/videos/' . $this->video_id . '.mp4');
+        unlink($videoPath);
+
+
+        $thumbnailPath = Yii::getAlias('@frontend/web/storage/thumbnails/' . $this->video_id . '.jpg');
+        if (file_exists($thumbnailPath)) {
+           unlink($thumbnailPath);
+        }
     }
 
 }

@@ -7,9 +7,7 @@ use common\widgets\Alert;
 
 $this->beginContent('@frontend/views/layouts/base.php');
 ?>
-
-<main class="d-flex flex-grow-1 align-items-stretch">
-    <?php echo $this->render('_sidebar') ?>
+<main class="d-flex">
     <div class="content-wrapper p-3">
         <?php echo Alert::widget() ?>
         <?php echo $content ?>
