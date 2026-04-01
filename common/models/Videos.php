@@ -22,6 +22,9 @@ use yii\imagine\Image;
  * @property int $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
+ * 
+ * @property \common\models\VideoLike[] $likes
+ * @property \common\models\VideoLike[] $dislikes
  */
 class Videos extends \yii\db\ActiveRecord
 {
@@ -107,6 +110,16 @@ class Videos extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getCreatedBy()
+    {
+        return $this->hasOne(User::class, ['id' => 'created_by']);
+    }
+
+    public function getViews()
+    {
+        return $this->hasMany(VideoView::class, ['video_id' => 'id']);
+    }
+
     /**
      * {@inheritdoc}
      * @return \common\models\query\VideosQuery the active query used by this AR class.
@@ -188,4 +201,26 @@ class Videos extends \yii\db\ActiveRecord
         }
     }
 
+    public function isLikeBy($userId)
+    {
+        return VideoLike::find()
+        ->userIdVideoId($userId, $this->id)
+        ->liked()
+        ->one();
+    }
+
+    public function isDislikeBy($userId)
+    {
+        return VideoLike::find()->userIdVideoId($userId, $this->id)->disliked()->one();
+    }
+
+    public function getLikes()
+    {
+        return $this->hasMany(VideoLike::class, ['video_id' => 'id'])->liked();
+    }
+
+    public function getDislikes()
+    {
+        return $this->hasMany(VideoLike::class, ['video_id' => 'id'])->disliked();
+    }
 }
