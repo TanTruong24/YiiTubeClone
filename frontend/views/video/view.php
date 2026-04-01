@@ -2,8 +2,8 @@
 
     /** @var \common\models\Videos $model */
 
-    use yii\helpers\Url;
-use yii\widgets\Pjax;
+    use yii\helpers\Html;
+    use yii\widgets\Pjax;
 
 ?>
 
@@ -19,15 +19,18 @@ use yii\widgets\Pjax;
                 <?php echo $model->getViews()->count() ?> views . <?php echo \Yii::$app->formatter->asDate($model->created_at) ?>
             </div>
             <div>
-                <?php Pjax::begin() ?>
+                <?php Pjax::begin()?>
                 <?php echo $this->render('_like_dislike', [
-                    'model' => $model
+                        'model' => $model,
                 ]) ?>
-                <?php Pjax::end() ?>
+                <?php Pjax::end()?>
             </div>
         </div>
-
+        <div>
+            <p>
+                <?php echo common\helpers\Html::channelLink($model->createdBy) ?>
+            </p>
+            <p><?php echo Html::encode($model->description) ?></p>
+        </div>
     </div>
-    <div class="col-sm-4 text-end">
-        <a href="<?php echo Url::to(['/video/index']) ?>" class="btn btn-secondary">Back to list</a>
 </div>

@@ -35,3 +35,11 @@ aside .nav-pills .nav-link:hover {
 body{
     padding-bottom: 100px;
 }
+
+.channel-link {
+    text-decoration: none;
+}
+
+.channel-link:hover {
+    text-decoration: underline;
+}

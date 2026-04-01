@@ -57,6 +57,11 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function getSubscribers()
+    {
+        return $this->hasMany(User::class, ['id' => 'user_id'])->viaTable('subscriber', ['channel_id' => 'id']);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -208,5 +213,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public function isSubscribed($userId)
+    {
+        return Subscriber::findOne([
+            'user_id' => $userId,
+            'channel_id' => $this->id,
+        ]);
     }
 }
