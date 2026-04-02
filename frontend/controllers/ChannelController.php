@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\jobs\SendMailJob;
 use common\models\Subscriber;
 use common\models\User;
 use common\models\Videos;
@@ -62,7 +63,16 @@ class ChannelController extends Controller
             $subscriber->user_id = \Yii::$app->user->id;
             $subscriber->channel_id = $channel->id;
             $subscriber->created_at = time();
-            $subscriber->save();
+            if ($subscriber->save()) {
+                $jobId = \Yii::$app->queue->push(new SendMailJob([
+                    'userId' => \Yii::$app->user->id,
+                    'channelId' => $channel->id,
+                ]));
+                \Yii::info(
+                    "Queued SendMailJob #{$jobId} for userId=" . \Yii::$app->user->id . " channelId={$channel->id}",
+                    __METHOD__
+                );
+            }
         } else {
             $subscriber->delete();
 

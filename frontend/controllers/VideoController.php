@@ -53,8 +53,19 @@ class VideoController extends Controller
         $videoView->user_id = \Yii::$app->user->id;
         $videoView->created_at = time();
         $videoView->save();
+
+        $similarVideo = Videos::find()
+            ->published()
+            ->andWhere(['!=', 'id', $id])
+            ->byKeyword($model->title)
+            ->limit(10)
+            ->all();
+
         
-        return $this->render('view', ['model' => $model]);
+        return $this->render('view', [
+            'model' => $model,
+            'similarVideo' => $similarVideo
+        ]);
     }
 
     public function actionLike($id)
@@ -123,4 +134,23 @@ class VideoController extends Controller
 
         throw new NotFoundHttpException('The requested video does not exist.');
     }
+
+    public function actionSearch($keyword)
+    {
+        $query = Videos::find()
+            ->published()
+            ->latest()
+            ->byKeyword($keyword);
+        
+        if ($keyword)
+        {
+            $query->byKeyword($keyword);
+        }
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query' => $query
+             ]
+        );
+        return $this->render('search', ['dataProvider' => $dataProvider]);
+    }   
 }

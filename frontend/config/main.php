@@ -44,6 +44,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 '/c/<username>' => 'channel/view',
+                '/v/<id>' => 'video/view',
             ],
         ],
 
