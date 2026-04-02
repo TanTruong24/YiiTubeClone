@@ -152,5 +152,24 @@ class VideoController extends Controller
              ]
         );
         return $this->render('search', ['dataProvider' => $dataProvider]);
-    }   
+    }
+
+    public function actionHistory()
+    {
+        $query = Videos::find()
+            ->alias('v')
+            ->innerJoin("(select video_id, user_id, MAX(created_at) as max_date 
+                    from video_view vv  
+                    where user_id = :userId
+                    group by vv.video_id) as vv", 'vv.video_id = v.id' ,[':userId' => \Yii::$app->user->id])
+            ->orderBy(['vv.max_date' => SORT_DESC]);
+
+        
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query' => $query
+             ]
+        );
+        return $this->render('history', ['dataProvider' => $dataProvider]);
+    }
 }
