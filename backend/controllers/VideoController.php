@@ -51,6 +51,7 @@ class VideoController extends Controller
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Videos::find()
+            ->with('createdBy')
             ->creator(Yii::$app->user->id)
             ->latest(),
             /*

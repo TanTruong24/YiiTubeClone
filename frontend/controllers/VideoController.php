@@ -37,7 +37,7 @@ class VideoController extends Controller
     {
         $dataProvider = new ActiveDataProvider(
             [
-                'query' => Videos::find()->published()->latest()
+                'query' => Videos::find()->with('createdBy')->published()->latest()
             ]
         );
         return $this->render('index', ['dataProvider' => $dataProvider]);
