@@ -1,0 +1,10 @@
+suite_namespace: frontend\tests\acceptance
+actor: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            url: http://yiitubeclone.test/index-test.php
+            browser: chrome
+            path: ''
+        - Yii2:
+            part: [orm, fixtures]
