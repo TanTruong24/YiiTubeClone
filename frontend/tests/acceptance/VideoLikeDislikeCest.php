@@ -97,7 +97,7 @@ class VideoLikeDislikeCest
         $expectedClass = $state['isActive'] ? 'btn-outline-secondary' : 'btn-outline-primary';
 
         $I->waitForElementVisible($buttonSelector, 5);
-        $I->waitForText((string) $expectedCount, 30, $countSelector);
+        $I->waitForText((string) $expectedCount, 5, $countSelector);
         $I->seeElement($buttonSelector . '.' . $expectedClass);
     }
 
